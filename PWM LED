@@ -1,0 +1,50 @@
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BCM)
+
+led = 14
+echo = 18
+trig = 15
+
+GPIO.setup(led, GPIO.OUT)
+GPIO.setup(echo, GPIO.IN)
+GPIO.setup(trig, GPIO.OUT)
+
+p = GPIO.PWM(led,50)
+
+p.start(0)
+
+try:
+        while True:
+                GPIO.output(trig, False)
+                time.sleep(0.5)
+                GPIO.output(trig, True)
+                time.sleep(0.00001)
+                GPIO.output(trig, False)
+                start = time.time()
+                while GPIO.input(echo) == 0:
+                        start = time.time()
+
+                while GPIO.input(echo) == 1:
+                        stop = time.time()
+
+                elapsed = stop - start
+                current_distance = elapsed * 17150
+                
+                distance = current_distance * 3
+
+                if distance > 100:
+                        distance = 100
+                if distance < 0:
+                        distance = 0
+
+                p.ChangeDutyCycle(100 - distance)
+                
+                time.sleep(0.5)
+
+except KeyboardInterrupt:
+        pass
+
+p.stop()
+
+GPIO.cleanup()
