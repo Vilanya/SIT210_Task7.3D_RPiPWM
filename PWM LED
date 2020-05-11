@@ -10,7 +10,7 @@ GPIO.setup(led, GPIO.OUT)
 GPIO.setup(echo, GPIO.IN)
 GPIO.setup(trig, GPIO.OUT)
 
-p = GPIO.PWM(led,50)
+p = GPIO.PWM(led,100)
 
 p.start(0)
 
